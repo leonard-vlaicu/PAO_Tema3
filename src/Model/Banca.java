@@ -33,4 +33,19 @@ public class Banca {
 	public void setNumarClienti (int numarClienti) {
 		NumarClienti = numarClienti;
 	}
+
+	public void adaugaClient(Client client) {
+		this.ListaClienti.put(client.getID(), client);
+	}
+	public void modificaClient(int idClient,Client client) {
+		this.ListaClienti.replace(idClient, client);
+	}
+	public void stergeClient(int idClient) {
+		this.ListaClienti.remove(idClient);
+	}
+	public void afiseazaClienti() {
+		for (Client client : this.ListaClienti.values()) {
+			System.out.println(client.toString());
+		}
+	}
 }

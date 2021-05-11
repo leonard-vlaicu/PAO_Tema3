@@ -37,6 +37,13 @@ public class Cont {
 		BalantaCont = balantaCont;
 	}
 
+	public void adauga			(int suma) {
+	this.BalantaCont += suma;
+	}
+	public void retrage			(int suma) {
+	this.BalantaCont -= suma;
+	}
+
 	@Override
 	public String toString() {
 		return "Cont{" +

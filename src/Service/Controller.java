@@ -36,10 +36,7 @@ public class Controller {
 				System.out.println("Introduceti Suma Dorita: ");
 				suma = scanner.nextInt();
 
-				client.getListaConturi().get(idCont)
-						.setBalantaCont(client.getListaConturi().get(idCont)
-								.getBalantaCont()+suma);
-				// client.depoziteaza(idCont, suma);
+				client.depoziteazaBani(idCont, suma);
 			}
 		}
 
@@ -64,9 +61,7 @@ public class Controller {
 				System.out.println("Introduceti Suma Dorita: ");
 				suma = scanner.nextInt();
 
-				client.getListaConturi().get(idCont)
-						.setBalantaCont(client.getListaConturi().get(idCont)
-								.getBalantaCont() - suma);
+				client.retrageBani(idCont, suma);
 			}
 		}
 
@@ -98,31 +93,18 @@ public class Controller {
 				System.out.println("Introduceti Suma Dorita: ");
 				suma = scanner.nextInt();
 
-				client.getListaConturi().get(idContSursa)
-						.setBalantaCont(client.getListaConturi().get(idContSursa)
-								.getBalantaCont() - suma);
-
-				client.getListaConturi().get(idContDest)
-						.setBalantaCont(client.getListaConturi().get(idContDest)
-								.getBalantaCont() + suma);
+				client.transferaBani(idContSursa, idContDest, suma);
 			}
 		}
 
 		// Afiseaza conturile curente
 		else if (option == 4) {
-			for (Cont cont : client.getListaConturi().values()) {
-				System.out.println(cont.toString());
-			}
+			client.afiseazaConturi();
 		}
 
 		// Afiseaza balanta totala
 		else if (option == 5) {
-			int balantaTotala = 0;
-			for (Cont cont : client.getListaConturi().values()) {
-				balantaTotala += cont.getBalantaCont();
-			}
-
-			System.out.println("Balanta Totala: " + balantaTotala);
+			System.out.println("Balanta Totala: " + client.balantaTotala());
 		}
 
 		// Deschide cont nou
@@ -137,7 +119,7 @@ public class Controller {
 			newCont.setID	(client.getNumarConturi());
 
 			client.setNumarConturi(client.getNumarConturi()+1);
-			client.getListaConturi().put(newCont.getID(), newCont);
+			client.deschideCont(newCont);
 		}
 
 		// Deconectare
@@ -160,51 +142,62 @@ public class Controller {
 
 			if (adminOpt == 1) {
 				Client client = new PersoanaFizica();
+				String numeCont, prenumeCont, CNP, dateInput;
+				DateTimeFormatter dateFormat;
+				LocalDate dataNasterii;
 
 				System.out.println("Nume: ");
-				client.setNume(scanner.next());
+				numeCont = scanner.next();
 
 				System.out.println("Prenume: ");
-				client.setPrenume(scanner.next());
+				prenumeCont = scanner.next();
 
 				System.out.println("CNP: ");
-				client.setCNP(scanner.next());
+				CNP = scanner.next();
 
 				System.out.println("Data Nasterii: ");
-				String dateInput = scanner.next();
-				DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-				LocalDate dataNasterii = LocalDate.parse(dateInput, dateFormat);
-				client.setDataNasterii(dataNasterii);
+				dateInput 	 = scanner.next();
+				dateFormat 	 = DateTimeFormatter.ofPattern("d/M/yyyy");
+				dataNasterii = LocalDate.parse(dateInput, dateFormat);
 
+				client.setNume(numeCont);
+				client.setPrenume(prenumeCont);
+				client.setCNP(CNP);
+				client.setDataNasterii(dataNasterii);
 				client.setID(bank.getNumarClienti());
 
 				bank.setNumarClienti(bank.getNumarClienti() + 1);
-				bank.getListaClienti().put(client.getID(), client);
-				// bank.adaugaClient(client.getID(), client);
+				bank.adaugaClient(client);
 			}
 
 			if (adminOpt == 2) {
 				Client client = new PersoanaJuridica();
+				String numeCont, prenumeCont, CNP, dateInput;
+				DateTimeFormatter dateFormat;
+				LocalDate dataNasterii;
 
 				System.out.println("Nume: ");
-				client.setNume(scanner.next());
+				numeCont = scanner.next();
 
 				System.out.println("Prenume: ");
-				client.setPrenume(scanner.next());
+				prenumeCont = scanner.next();
 
 				System.out.println("CNP: ");
-				client.setCNP(scanner.next());
+				CNP = scanner.next();
 
 				System.out.println("Data Nasterii: ");
-				String dateInput = scanner.next();
-				DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-				LocalDate dataNasterii = LocalDate.parse(dateInput, dateFormat);
-				client.setDataNasterii(dataNasterii);
+				dateInput 	 = scanner.next();
+				dateFormat 	 = DateTimeFormatter.ofPattern("d/M/yyyy");
+				dataNasterii = LocalDate.parse(dateInput, dateFormat);
 
+				client.setNume(numeCont);
+				client.setPrenume(prenumeCont);
+				client.setCNP(CNP);
+				client.setDataNasterii(dataNasterii);
 				client.setID(bank.getNumarClienti());
 
 				bank.setNumarClienti(bank.getNumarClienti() + 1);
-				bank.getListaClienti().put(client.getID(), client);
+				bank.adaugaClient(client);
 			}
 
 			System.out.println("Datele au fost inserate");
@@ -230,8 +223,8 @@ public class Controller {
 			newCNP 		= scanner.next();
 
 			System.out.println("Data Nasterii: ");
-			dateInput = scanner.next();
-			dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+			dateInput 	 = scanner.next();
+			dateFormat 	 = DateTimeFormatter.ofPattern("d/M/yyyy");
 			dataNasterii = LocalDate.parse(dateInput, dateFormat);
 
 			temp.setNume		(newName);
@@ -242,26 +235,26 @@ public class Controller {
 			temp.setListaConturi(bank.getListaClienti().get(idClient).getListaConturi());
 			temp.setNumarConturi(bank.getListaClienti().get(idClient).getNumarConturi());
 
-			bank.getListaClienti().replace(idClient, temp);
+			bank.modificaClient(idClient, temp);
 
 			System.out.println("Datele pentru ID-ul " + idClient + " au fost actualizate");
 		}
 
 		// Sterge client
 		else if (option == 3) {
-			System.out.println("Introduceti ID-ul Clientului: ");
-			int idClient = scanner.nextInt();
+			int idClient;
 
-			bank.getListaClienti().remove(idClient);
+			System.out.println("Introduceti ID-ul Clientului: ");
+			idClient = scanner.nextInt();
+
+			bank.stergeClient(idClient);
 
 			System.out.println("Clientul cu ID-ul " + idClient + " a fost sters");
 		}
 
 		// Afiseaza toti clientii
 		else if (option == 4) {
-			for (Client client : bank.getListaClienti().values()) {
-				System.out.println(client.toString());
-			}
+			bank.afiseazaClienti();
 		}
 
 		// Deconectare

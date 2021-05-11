@@ -76,6 +76,33 @@ public class Client {
 		this.ID = ID;
 	}
 
+	public void depoziteazaBani (int idCont, int suma) {
+		this.ListaConturi.get(idCont).adauga(suma);
+	}
+	public void retrageBani		(int idCont, int suma) {
+		this.ListaConturi.get(idCont).retrage(suma);
+	}
+	public void transferaBani	(int idContSursa, int idContDest, int suma) {
+		this.ListaConturi.get(idContSursa).retrage(suma);
+		this.ListaConturi.get(idContDest ).adauga (suma);
+	}
+	public void afiseazaConturi () {
+		for (Cont cont : this.ListaConturi.values()) {
+			System.out.println(cont.toString());
+		}
+	}
+	public int  balantaTotala	() {
+		int balantaTotala = 0;
+		for (Cont cont : this.ListaConturi.values()) {
+			balantaTotala += cont.getBalantaCont();
+		}
+
+		return  balantaTotala;
+	}
+	public void deschideCont	(Cont cont) {
+		this.ListaConturi.put(cont.getID(), cont);
+	}
+
 	@Override
 	public String toString() {
 		return "Client{" +
