@@ -6,6 +6,7 @@ public class Cont {
 	private int		ID;
 	private int		BalantaCont;
 
+	// Constructori
 	public Cont() {
 		this.Nume			= "NULL";
 		this.ID				= -1;
@@ -17,6 +18,7 @@ public class Cont {
 		this.BalantaCont 	= 0;
 	}
 
+	// Getters
 	public int			getBalantaCont() {
 		return BalantaCont;
 	}
@@ -27,6 +29,7 @@ public class Cont {
 		return ID;
 	}
 
+	// Setters
 	public void setNume			(String nume) {
 		Nume = nume;
 	}
@@ -37,6 +40,7 @@ public class Cont {
 		BalantaCont = balantaCont;
 	}
 
+	// Metode Publice
 	public void adauga			(int suma) {
 	this.BalantaCont += suma;
 	}

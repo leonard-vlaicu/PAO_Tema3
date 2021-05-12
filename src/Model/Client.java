@@ -13,6 +13,7 @@ public class Client {
 	protected int NumarConturi;
 	protected int ID;
 
+	// Constructori
 	public Client() {
 		this.Nume			= "NULL";
 		this.Prenume		= "NULL";
@@ -32,6 +33,7 @@ public class Client {
 		this.NumarConturi	= 0;
 	}
 
+	// Getters
 	public String					getNume() {
 		return Nume;
 	}
@@ -54,6 +56,7 @@ public class Client {
 		return NumarConturi;
 	}
 
+	// Setters
 	public void setNumarConturi	(int numarConturi) {
 		NumarConturi = numarConturi;
 	}
@@ -76,6 +79,7 @@ public class Client {
 		this.ID = ID;
 	}
 
+	// Metode Publice
 	public void depoziteazaBani (int idCont, int suma) {
 		this.ListaConturi.get(idCont).adauga(suma);
 	}
