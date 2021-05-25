@@ -12,6 +12,7 @@ public class Client {
 	protected HashMap<Integer, Cont> ListaConturi;
 	protected int NumarConturi;
 	protected int ID;
+	private static int numClients;
 
 	// Constructori
 	public Client() {
@@ -20,7 +21,7 @@ public class Client {
 		this.CNP			= "NULL";
 		this.DataNasterii	= LocalDate.now();
 		this.ListaConturi	= new HashMap<>();
-		this.ID				= -1;
+		this.ID				= ++numClients;
 		this.NumarConturi	= 0;
 	}
 	public Client(String nume, String prenume, String CNP, LocalDate dataNasterii, int ID) {
@@ -29,8 +30,8 @@ public class Client {
 		this.CNP			= CNP;
 		this.DataNasterii	= dataNasterii;
 		this.ListaConturi	= new HashMap<Integer, Cont>();
-		this.ID				= ID;
-		this.NumarConturi	= 0;
+		this.ID				= ++numClients;
+		this.NumarConturi	= 1;
 	}
 
 	// Getters
@@ -105,6 +106,7 @@ public class Client {
 	}
 	public void deschideCont	(Cont cont) {
 		this.ListaConturi.put(cont.getID(), cont);
+		this.NumarConturi += 1;
 	}
 
 	@Override

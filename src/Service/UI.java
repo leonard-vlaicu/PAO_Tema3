@@ -3,11 +3,12 @@ package Service;
 
 import Model.*;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class UI {
 
-	public void program() {
+	public void program() throws IOException {
 		int option;
 
 		Scanner scanner 		= new Scanner(System.in);
@@ -22,7 +23,7 @@ public class UI {
 		System.out.println("--------------");
 		System.out.println("1. User	 Menu");
 		System.out.println("2. Admin Menu");
-		System.out.println("9. Exit");
+		System.out.println("9. Exit\n");
 
 		option = scanner.nextInt();
 
@@ -52,7 +53,7 @@ public class UI {
 						System.out.println("4. Afiseaza conturile");
 						System.out.println("5. Afiseaza balanta");
 						System.out.println("6. Deschide cont nou");
-						System.out.println("9. Log-Out");
+						System.out.println("9. Log-Out\n");
 
 						userOpt = scanner.nextInt();
 
@@ -66,7 +67,7 @@ public class UI {
 							System.out.println("4. Afiseaza conturile");
 							System.out.println("5. Afiseaza balanta");
 							System.out.println("6. Deschide cont nou");
-							System.out.println("9. Log-Out");
+							System.out.println("9. Log-Out\n");
 
 							userOpt = scanner.nextInt();
 						}
@@ -76,7 +77,7 @@ public class UI {
 				// Autentificarea esueaza
 				if (!userAuth) {
 					System.out.println("Date de autentificare incorecte");
-					System.out.println("Deconectare..");
+					System.out.println("Deconectare..\n");
 					option = 9;
 				}
 			}
@@ -98,7 +99,11 @@ public class UI {
 					System.out.println("2. Actualizeaza Date Client");
 					System.out.println("3. Sterge Client");
 					System.out.println("4. Afiseaza Clienti");
-					System.out.println("9. Log-Out");
+					System.out.println("5. Importa Date Clienti");
+					System.out.println("6. Exporta Date Clienti");
+					System.out.println("7. Importa Date Conturi");
+					System.out.println("8. Exporta Date Conturi");
+					System.out.println("9. Log-Out\n");
 
 					adminOpt = scanner.nextInt();
 
@@ -110,10 +115,18 @@ public class UI {
 						System.out.println("2. Actualizeaza Date Client");
 						System.out.println("3. Sterge Client");
 						System.out.println("4. Afiseaza Clienti");
-						System.out.println("9. Log-Out");
+						System.out.println("5. Importa Date Clienti");
+						System.out.println("6. Exporta Date Clienti");
+						System.out.println("7. Importa Date Conturi");
+						System.out.println("8. Exporta Date Conturi");
+						System.out.println("9. Log-Out\n");
 
 						adminOpt = scanner.nextInt();
 					}
+				}
+				else {
+					System.out.println("Date de autentificare incorecte");
+					System.out.println("Deconectare..\n");
 				}
 			}
 
@@ -124,7 +137,7 @@ public class UI {
 			System.out.println("--------------");
 			System.out.println("1. User	 Menu");
 			System.out.println("2. Admin Menu");
-			System.out.println("9. Exit");
+			System.out.println("9. Exit\n");
 
 			option = scanner.nextInt();
 		}

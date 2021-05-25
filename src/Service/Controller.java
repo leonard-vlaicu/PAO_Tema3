@@ -3,8 +3,12 @@ package Service;
 
 import Model.*;
 
+import java.io.IOException;
+import java.lang.ref.Cleaner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Controller {
@@ -129,7 +133,7 @@ public class Controller {
 	}
 
 	// Implementare Comenzi Admin
-	public void AdminCommand(int option, Banca bank) {
+	public void AdminCommand(int option, Banca bank) throws IOException {
 		Scanner scanner = new Scanner(System.in);
 		int adminOpt = -1;
 
@@ -157,16 +161,14 @@ public class Controller {
 
 				System.out.println("Data Nasterii: ");
 				dateInput 	 = scanner.next();
-				dateFormat 	 = DateTimeFormatter.ofPattern("d/M/yyyy");
+				dateFormat 	 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				dataNasterii = LocalDate.parse(dateInput, dateFormat);
 
 				client.setNume(numeCont);
 				client.setPrenume(prenumeCont);
 				client.setCNP(CNP);
 				client.setDataNasterii(dataNasterii);
-				client.setID(bank.getNumarClienti());
 
-				bank.setNumarClienti(bank.getNumarClienti() + 1);
 				bank.adaugaClient(client);
 			}
 
@@ -187,16 +189,14 @@ public class Controller {
 
 				System.out.println("Data Nasterii: ");
 				dateInput 	 = scanner.next();
-				dateFormat 	 = DateTimeFormatter.ofPattern("d/M/yyyy");
+				dateFormat 	 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				dataNasterii = LocalDate.parse(dateInput, dateFormat);
 
 				client.setNume(numeCont);
 				client.setPrenume(prenumeCont);
 				client.setCNP(CNP);
 				client.setDataNasterii(dataNasterii);
-				client.setID(bank.getNumarClienti());
 
-				bank.setNumarClienti(bank.getNumarClienti() + 1);
 				bank.adaugaClient(client);
 			}
 
@@ -224,7 +224,7 @@ public class Controller {
 
 			System.out.println("Data Nasterii: ");
 			dateInput 	 = scanner.next();
-			dateFormat 	 = DateTimeFormatter.ofPattern("d/M/yyyy");
+			dateFormat 	 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			dataNasterii = LocalDate.parse(dateInput, dateFormat);
 
 			temp.setNume		(newName);
@@ -255,6 +255,29 @@ public class Controller {
 		// Afiseaza toti clientii
 		else if (option == 4) {
 			bank.afiseazaClienti();
+		}
+
+		// Importa date clienti
+		else if (option == 5) {
+			bank.importClienti();
+			System.out.println("Datele au fost importate cu succes");
+		}
+
+		// Exporta date clienti
+		else if (option == 6) {
+			bank.exportClienti();
+			System.out.println("Datele au fost exportate cu succes");
+		}
+
+		// Importa date conturi
+		else if (option == 7) {
+			bank.importConturi();
+			System.out.println("Datele au fost importate cu succes");
+		}
+
+		else if (option ==8) {
+			bank.exportConturi();
+			System.out.println("Datele au fost exportate cu succes");
 		}
 
 		// Deconectare
