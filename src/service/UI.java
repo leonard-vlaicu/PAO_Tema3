@@ -1,14 +1,20 @@
 
-package Service;
+package service;
 
-import Model.*;
+import model.*;
+
 
 import java.io.IOException;
+
+import java.sql.SQLException;
+
 import java.util.Scanner;
+
+
 
 public class UI {
 
-	public void program() throws IOException {
+	public void program() throws IOException, SQLException {
 		int option;
 
 		Scanner scanner 		= new Scanner(System.in);
@@ -58,7 +64,7 @@ public class UI {
 						userOpt = scanner.nextInt();
 
 						while (userOpt != 9) {
-							controller.UserCommand(userOpt, client);
+							controller.UserCommand(userOpt, client, Bank);
 
 							System.out.println("\nUserMenu");
 							System.out.println("1. Depoziteaza bani");
@@ -74,7 +80,7 @@ public class UI {
 					}
 				}
 
-				// Autentificarea esueaza
+				// Autentificare respinsa
 				if (!userAuth) {
 					System.out.println("Date de autentificare incorecte");
 					System.out.println("Deconectare..\n");
@@ -124,6 +130,8 @@ public class UI {
 						adminOpt = scanner.nextInt();
 					}
 				}
+
+				// Autentificare respinsa
 				else {
 					System.out.println("Date de autentificare incorecte");
 					System.out.println("Deconectare..\n");

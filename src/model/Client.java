@@ -1,8 +1,18 @@
 
-package Model;
+package model;
+
+import utilities.DBConnection;
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import java.time.LocalDate;
+
 import java.util.HashMap;
+
+
 
 public class Client {
 	protected String Nume;
@@ -14,6 +24,7 @@ public class Client {
 	protected int ID;
 	private static int numClients;
 
+
 	// Constructori
 	public Client() {
 		this.Nume			= "NULL";
@@ -22,7 +33,7 @@ public class Client {
 		this.DataNasterii	= LocalDate.now();
 		this.ListaConturi	= new HashMap<>();
 		this.ID				= ++numClients;
-		this.NumarConturi	= 0;
+		this.NumarConturi	= 1;
 	}
 	public Client(String nume, String prenume, String CNP, LocalDate dataNasterii, int ID) {
 		this.Nume			= nume;
@@ -34,28 +45,30 @@ public class Client {
 		this.NumarConturi	= 1;
 	}
 
+
 	// Getters
-	public String					getNume() {
+	public String					getNume			() {
 		return Nume;
 	}
-	public String 					getPrenume() {
+	public String 					getPrenume		() {
 		return Prenume;
 	}
-	public String 					getCNP() {
+	public String 					getCNP			() {
 		return CNP;
 	}
-	public LocalDate 				getDataNasterii() {
+	public LocalDate 				getDataNasterii	() {
 		return DataNasterii;
 	}
-	public HashMap<Integer, Cont> 	getListaConturi() {
+	public HashMap<Integer, Cont> 	getListaConturi	() {
 		return ListaConturi;
 	}
-	public int						getID() {
+	public int						getID			() {
 		return ID;
 	}
-	public int						getNumarConturi() {
+	public int						getNumarConturi	() {
 		return NumarConturi;
 	}
+
 
 	// Setters
 	public void setNumarConturi	(int numarConturi) {
@@ -79,6 +92,7 @@ public class Client {
 	public void setID			(int ID) {
 		this.ID = ID;
 	}
+
 
 	// Metode Publice
 	public void depoziteazaBani (int idCont, int suma) {
@@ -104,7 +118,18 @@ public class Client {
 
 		return  balantaTotala;
 	}
-	public void deschideCont	(Cont cont) {
+	public void deschideCont	(Cont cont) throws SQLException {
+		DBConnection dbConnection = DBConnection.getInstance();
+		Connection connection	  = dbConnection.getDBConnection();
+
+		String SQL = "INSERT INTO cont VALUES (default, ?, ?, ?)";
+		PreparedStatement InsertCont = connection.prepareStatement(SQL);
+		InsertCont.setString(1, cont.getNume());
+		InsertCont.setInt(2, 0);
+		InsertCont.setInt(3, this.ID);
+		InsertCont.executeUpdate();
+		InsertCont.close();
+
 		this.ListaConturi.put(cont.getID(), cont);
 		this.NumarConturi += 1;
 	}

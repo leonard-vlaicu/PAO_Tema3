@@ -1,5 +1,5 @@
 
-package Model;
+package model;
 
 public class Cont {
 	private String	Nume;
@@ -9,23 +9,23 @@ public class Cont {
 	// Constructori
 	public Cont() {
 		this.Nume			= "NULL";
-		this.ID				= -1;
+		this.ID				= 1;
 		this.BalantaCont	= 0;
 	}
 	public Cont(String nume) {
 		this.Nume 			= nume;
-		this.ID 			= -1;
+		this.ID 			= 1;
 		this.BalantaCont 	= 0;
 	}
 
 	// Getters
-	public int			getBalantaCont() {
+	public int			getBalantaCont	() {
 		return BalantaCont;
 	}
-	public String		getNume() {
+	public String		getNume			() {
 		return Nume;
 	}
-	public int 			getID() {
+	public int 			getID			() {
 		return ID;
 	}
 

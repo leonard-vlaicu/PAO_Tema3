@@ -1,22 +1,35 @@
 
-package Service;
+package service;
 
-import Model.*;
+import model.*;
+import utilities.DBConnection;
+
 
 import java.io.IOException;
-import java.lang.ref.Cleaner;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Scanner;
 
+
+
 public class Controller {
+	private final Connection connection;
+	private final DBConnection dbConnection;
+
+	// Constructor
 	public Controller() {
+		this.dbConnection = DBConnection.getInstance();
+		this.connection = dbConnection.getDBConnection();
 	}
 
 	// Implementare Comenzi Utilizator
-	public void UserCommand(int option, Client client){
+	public void UserCommand(int option, Client client, Banca bank) throws SQLException {
 		Scanner scanner	= new Scanner(System.in);
 
 		// Depoziteaza bani
@@ -25,6 +38,7 @@ public class Controller {
 			int suma;
 			boolean found = false;
 			String numeCont;
+			Cont conttmp = new Cont();
 
 			System.out.println("Introduceti Numele Contului: ");
 			numeCont = scanner.next();
@@ -33,6 +47,7 @@ public class Controller {
 				if(cont.getNume().equals(numeCont)) {
 					idCont	= cont.getID();
 					found	= true;
+					conttmp = cont;
 				}
 			}
 
@@ -41,6 +56,16 @@ public class Controller {
 				suma = scanner.nextInt();
 
 				client.depoziteazaBani(idCont, suma);
+
+				DBConnection dbConnection = this.dbConnection;
+				Connection connection     = this.connection;
+				String SQL = "UPDATE cont SET BalantaCont = ? WHERE IDCont = ? AND IDClient = ?";
+				PreparedStatement DepoziteazaBani = connection.prepareStatement(SQL);
+				DepoziteazaBani.setInt(1, conttmp.getBalantaCont());
+				DepoziteazaBani.setInt(2, idCont);
+				DepoziteazaBani.setInt(3, client.getID());
+				DepoziteazaBani.executeUpdate();
+				DepoziteazaBani.close();
 			}
 		}
 
@@ -50,6 +75,7 @@ public class Controller {
 			int suma;
 			boolean found = false;
 			String numeCont;
+			Cont conttmp = new Cont();
 
 			System.out.println("Introduceti Numele Contului: ");
 			numeCont = scanner.next();
@@ -58,6 +84,7 @@ public class Controller {
 				if(cont.getNume().equals(numeCont)) {
 					idCont	= cont.getID();
 					found	= true;
+					conttmp = cont;
 				}
 			}
 
@@ -66,6 +93,16 @@ public class Controller {
 				suma = scanner.nextInt();
 
 				client.retrageBani(idCont, suma);
+
+				DBConnection dbConnection = this.dbConnection;
+				Connection connection     = this.connection;
+				String SQL = "UPDATE cont SET BalantaCont = ? WHERE IDCont = ? AND IDClient = ?";
+				PreparedStatement RetrageBani = connection.prepareStatement(SQL);
+				RetrageBani.setInt(1, conttmp.getBalantaCont());
+				RetrageBani.setInt(2, idCont);
+				RetrageBani.setInt(3, client.getID());
+				RetrageBani.executeUpdate();
+				RetrageBani.close();
 			}
 		}
 
@@ -74,6 +111,7 @@ public class Controller {
 			int idContSursa = -1, idContDest = -1, suma;
 			boolean foundSursa = false, foundDest = false;
 			String numeContSursa, numeContDest;
+			Cont contTmp1 = new Cont(), contTmp2 = new Cont();
 
 			System.out.println("Introduceti Numele Contului Sursa: ");
 			numeContSursa = scanner.next();
@@ -85,11 +123,13 @@ public class Controller {
 				if (cont.getNume().equals(numeContSursa)){
 					idContSursa = cont.getID();
 					foundSursa	= true;
+					contTmp1	= cont;
 				}
 
 				else if (cont.getNume().equals(numeContDest)) {
 					idContDest	= cont.getID();
 					foundDest	= true;
+					contTmp2	= cont;
 				}
 			}
 
@@ -98,6 +138,27 @@ public class Controller {
 				suma = scanner.nextInt();
 
 				client.transferaBani(idContSursa, idContDest, suma);
+
+				DBConnection dbConnection = this.dbConnection;
+				Connection connection     = this.connection;
+
+				String SQLSrc = "UPDATE cont SET BalantaCont = ? WHERE IDCont = ? AND IDClient = ?";
+				String SQLDst = "UPDATE cont SET BalantaCont = ? WHERE IDCont = ? AND IDClient = ?";
+
+				PreparedStatement TransferaBaniSrc = connection.prepareStatement(SQLSrc);
+				PreparedStatement TransferaBaniDst = connection.prepareStatement(SQLDst);
+
+				TransferaBaniSrc.setInt(1, contTmp1.getBalantaCont());
+				TransferaBaniSrc.setInt(2, idContSursa);
+				TransferaBaniSrc.setInt(3, client.getID());
+				TransferaBaniSrc.executeUpdate();
+				TransferaBaniSrc.close();
+
+				TransferaBaniDst.setInt(1, contTmp2.getBalantaCont());
+				TransferaBaniDst.setInt(2, idContDest);
+				TransferaBaniDst.setInt(3, client.getID());
+				TransferaBaniDst.executeUpdate();
+				TransferaBaniDst.close();
 			}
 		}
 
@@ -122,18 +183,28 @@ public class Controller {
 			newCont.setNume	(numeCont);
 			newCont.setID	(client.getNumarConturi());
 
-			client.setNumarConturi(client.getNumarConturi()+1);
+//			client.setNumarConturi(client.getNumarConturi()+1);
 			client.deschideCont(newCont);
+
+			DBConnection dbConnection = DBConnection.getInstance();
+			Connection connection 	  = dbConnection.getDBConnection();
+
+			String SQL = "UPDATE client SET NumarConturi = ? WHERE IDClient = ?";
+			PreparedStatement DeschideCont = connection.prepareStatement(SQL);
+
+			DeschideCont.setInt(1, client.getNumarConturi()-1);
+			DeschideCont.setInt(2, client.getID());
+			DeschideCont.executeUpdate();
+			DeschideCont.close();
 		}
 
 		// Deconectare
 		else if (option == 9) {
-
 		}
 	}
 
 	// Implementare Comenzi Admin
-	public void AdminCommand(int option, Banca bank) throws IOException {
+	public void AdminCommand(int option, Banca bank) throws IOException, SQLException {
 		Scanner scanner = new Scanner(System.in);
 		int adminOpt = -1;
 
@@ -144,6 +215,7 @@ public class Controller {
 
 			adminOpt = scanner.nextInt();
 
+			// Persoana fizica
 			if (adminOpt == 1) {
 				Client client = new PersoanaFizica();
 				String numeCont, prenumeCont, CNP, dateInput;
@@ -170,8 +242,19 @@ public class Controller {
 				client.setDataNasterii(dataNasterii);
 
 				bank.adaugaClient(client);
+
+				String SQL = "INSERT INTO client VALUES (default , ?, ?, ?, ?, ?)";
+				PreparedStatement InsertClient = this.connection.prepareStatement(SQL);
+				InsertClient.setString(1, numeCont);
+				InsertClient.setString(2, prenumeCont);
+				InsertClient.setString(3, CNP);
+				InsertClient.setDate  (4, java.sql.Date.valueOf(dataNasterii));
+				InsertClient.setInt   (5, 1);
+				InsertClient.executeUpdate();
+				InsertClient.close();
 			}
 
+			// Persoana juridica
 			if (adminOpt == 2) {
 				Client client = new PersoanaJuridica();
 				String numeCont, prenumeCont, CNP, dateInput;
@@ -198,6 +281,16 @@ public class Controller {
 				client.setDataNasterii(dataNasterii);
 
 				bank.adaugaClient(client);
+
+				String SQL = "INSERT INTO client VALUES (default , ?, ?, ?, ?, ?)";
+				PreparedStatement InsertClient = this.connection.prepareStatement(SQL);
+				InsertClient.setString(1, numeCont);
+				InsertClient.setString(2, prenumeCont);
+				InsertClient.setString(3, CNP);
+				InsertClient.setDate  (4, java.sql.Date.valueOf(dataNasterii));
+				InsertClient.setInt   (5, 1);
+				InsertClient.executeUpdate();
+				InsertClient.close();
 			}
 
 			System.out.println("Datele au fost inserate");
@@ -237,6 +330,18 @@ public class Controller {
 
 			bank.modificaClient(idClient, temp);
 
+			String SQL = "UPDATE client SET NumeClient = ?, PrenumeClient = ?, CNP = ?, DataNasterii = ?, NumarConturi = ? WHERE IDClient = ?";
+
+			PreparedStatement UpdateClient = this.connection.prepareStatement(SQL);
+			UpdateClient.setString(1, newName);
+			UpdateClient.setString(2, newPrenume);
+			UpdateClient.setString(3, newCNP);
+			UpdateClient.setDate  (4, java.sql.Date.valueOf(dataNasterii));
+			UpdateClient.setInt   (5, 0);
+			UpdateClient.setInt	  (6, idClient);
+			UpdateClient.executeUpdate();
+			UpdateClient.close();
+
 			System.out.println("Datele pentru ID-ul " + idClient + " au fost actualizate");
 		}
 
@@ -246,8 +351,14 @@ public class Controller {
 
 			System.out.println("Introduceti ID-ul Clientului: ");
 			idClient = scanner.nextInt();
-
 			bank.stergeClient(idClient);
+
+			String SQL = "DELETE FROM client WHERE IDClient = ?";
+			PreparedStatement DeleteClient = this.connection.prepareStatement(SQL);
+
+			DeleteClient.setInt(1, idClient);
+			DeleteClient.executeUpdate();
+			DeleteClient.close();
 
 			System.out.println("Clientul cu ID-ul " + idClient + " a fost sters");
 		}
@@ -255,6 +366,12 @@ public class Controller {
 		// Afiseaza toti clientii
 		else if (option == 4) {
 			bank.afiseazaClienti();
+
+			String SQL = "SELECT* FROM client";
+			PreparedStatement SelectClient = this.connection.prepareStatement(SQL);
+
+			SelectClient.execute();
+			SelectClient.close();
 		}
 
 		// Importa date clienti

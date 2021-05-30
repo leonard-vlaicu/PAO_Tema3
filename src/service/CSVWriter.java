@@ -1,13 +1,19 @@
-package Service;
 
-import Model.*;
+package service;
+
+import model.*;
+
 
 import java.io.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+
 
 public class CSVWriter {
 	// Constructor
@@ -19,13 +25,12 @@ public class CSVWriter {
 		private static final CSVWriter INSTANCE = new CSVWriter();
 
 	}
-
 	public static CSVWriter getInstance() {
 		return CitireCSVHelper.INSTANCE;
 	}
 
 	// Metode Publice
-	public ArrayList<Client> importClienti() throws IOException {
+	public ArrayList<Client> 			importClienti() throws IOException {
 		ArrayList<Client> dateImport = new ArrayList<>();
 		String CSVline = "", splitBy = ",", datetimeInput, headerLine;
 		String[] dateCSV;
@@ -55,21 +60,6 @@ public class CSVWriter {
 
 		return dateImport;
 	}
-	public void exportClienti(HashMap<Integer, Client> listaClienti) throws IOException {
-		ArrayList<Client> dateExport = new ArrayList<Client>(listaClienti.values());
-		BufferedWriter bw = new BufferedWriter(new FileWriter("src/utilities/clientiDst.csv", true));
-		String header = "ID,Nume,Prenume,CNP,Data Nasterii \n";
-		bw.write(header);
-
-		for (Client client : dateExport) {
-			String info = client.getID() + "," + client.getNume() + "," + client.getPrenume() + "," +
-					client.getCNP() + "," + client.getDataNasterii() + "\n";
-			bw.write(info);
-		}
-		bw.close();
-		audit("Export Clienti");
-
-	}
 	public ArrayList<ArrayList<String>> importConturi() throws IOException {
 		ArrayList<ArrayList<String>> dateImport = new ArrayList<>();
 		ArrayList<String> idClienti  = new ArrayList<>();
@@ -96,6 +86,22 @@ public class CSVWriter {
 
 
 		return dateImport;
+	}
+
+	public void exportClienti(HashMap<Integer, Client> listaClienti) throws IOException {
+		ArrayList<Client> dateExport = new ArrayList<Client>(listaClienti.values());
+		BufferedWriter bw = new BufferedWriter(new FileWriter("src/utilities/clientiDst.csv", true));
+		String header = "ID,Nume,Prenume,CNP,Data Nasterii \n";
+		bw.write(header);
+
+		for (Client client : dateExport) {
+			String info = client.getID() + "," + client.getNume() + "," + client.getPrenume() + "," +
+					client.getCNP() + "," + client.getDataNasterii() + "\n";
+			bw.write(info);
+		}
+		bw.close();
+		audit("Export Clienti");
+
 	}
 	public void exportConturi(HashMap<Integer, Client> listaClienti) throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter("src/utilities/conturiDst.csv", true));
